@@ -1,0 +1,110 @@
+# class ContactBook:
+#     def __init__(self):
+#         self.contacts = {}
+#     def add_contact(self, name, phone_number):
+#         self.contacts[name] = phone_number
+#         print(f"Contact {name} added with phone number {phone_number}")
+#     def find_contact(self, name):
+#         if name in self.contacts:
+#             print(f"Phone number for {name}: {self.contacts[name]}")
+#         else:
+#             print(f"Contact {name} not found in the contact book")
+#     def update_contact(self, name, new_phone_number):
+#         if name in self.contacts:
+#             self.contacts[name] = new_phone_number
+#             print(f"Phone number for {name} updated to {new_phone_number}")
+#         else:
+#             print(f"Contact {name} not found in the contact book")
+#     def display_contacts(self):
+#         print("Contact Book:")
+#         for name, phone_number in self.contacts.items():
+#             print(f"{name}: {phone_number}")
+def input_error(foo):
+    def wrapper(*args):
+        try:
+            return foo(*args)
+        except KeyError:
+            print("There is no such record in the book")
+        except IndexError:
+            print("Invalid number of parameters passed to the command")
+        except TypeError:
+            print("Invalid number of parameters passed to the command")
+    return wrapper
+@input_error
+def handle_add(book, name, phone):
+    book[name] = phone
+    return book
+@input_error
+def handle_read(book, args):
+    name = args[0]
+    print(book[name])
+    for key, value in book.items():
+        print(f"{key}: {value}")
+@input_error
+def handle_change(book, args):
+    name = args[0]
+    phone = args[1]
+    # if name in book.keys():
+    #     book[name] = phone
+    # else:
+    #     raise KeyError()
+    if not name in book.keys():
+        raise KeyError()
+    book[name] = phone
+    return book
+@input_error
+def handle_show_all(book):
+    for key, value in book.items():
+        print(f"{key}: {value}")
+# @input_error
+# def handle_show(book):
+#     #print(book[name])
+#     for key, value in book.items():
+#         print(f"{key}: {value}")
+def main():
+    # contact_book = ContactBook()
+    contact_book = {}
+    while True:
+        choice = input('')
+        if choice == 'show all':
+            handle_show_all(contact_book)
+        if choice in ['exit', 'close', 'good bye']:
+            print('Good bye!')
+            break
+
+
+        words = choice.split(' ')
+        command = words[0]
+        args = words[1:]
+        if command == '':
+            pass
+        elif command == 'hello':
+            print('How canI help you?')
+        elif command == 'FAQ':
+            print('-' * 100 + '\n'
+                  'I can Add command-> "add" new row in Phone Book, Change command-> "change" the item in Phone Book,\n'
+                  'Show the phones by the name that stored in the Phone Book command-> "phone",\n'
+                  'Show all items in the Phone Book command-> "show all",\n'
+                  'Close the Phone Book command-> "good buy", "close", "exit"\n' +
+                  '-' * 100 + '\n')
+        elif command == 'add':
+            handle_add(contact_book, *args)
+        elif command == 'change':
+            handle_change(contact_book, args)
+        elif command == "phone":
+            handle_read(contact_book, args)
+        elif command == "exit":
+            break
+        # elif choice == "3":
+        #     name = input("Enter contact name to update: ")
+        #     new_phone_number = input("Enter new phone number: ")
+        #     contact_book.update_contact(name, new_phone_number)
+        # elif choice == "4":
+        #     contact_book.display_contacts()
+        # elif choice == "5":
+        #     print("Exiting the Contact Book. Goodbye!")
+        #     break
+        else:
+            print("Invalid command")
+if __name__ == "__main__":
+    main()
